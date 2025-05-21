@@ -1,61 +1,98 @@
-# 🚀 Plano de Desenvolvimento — Pipeline Atualizado
+# 🚀 Projeto Integrado Deep Learning — Pipeline Atualizado
 
-## 📑 Pipeline de Desenvolvimento — Atualizado
+## 📑 Visão Geral do Projeto
 
-### ✔️ Fluxo Estratégico do Projeto
-
-```
-Ingestão → Persistência (MongoDB) → Vetorização (Imagens) → Salvamento dos Vetores (Drive) → Modelagem IA → Validação e Ajustes → EDA Complementar
-```
-
-### ✔️ Justificativa da Arquitetura
-
-Adotamos uma **arquitetura híbrida**, que separa os dados conforme suas características e volume, garantindo robustez, escalabilidade, simplicidade e baixo custo.
-
-| Componente                       | Localização                       | Justificativa Principal                                          |
-|-----------------------------------|------------------------------------|------------------------------------------------------------------|
-| Dados tabulares (CSV)             | **MongoDB Atlas**                 | Leves, baixo volume, permite consultas remotas e centralizadas  |
-| Metadados das imagens             | **MongoDB Atlas**                 | Permitem rastreabilidade, controle e integridade dos dados      |
-| Vetores das imagens (X_img)       | **Google Drive (.npy)**            | Maior volume, armazenamento escalável e gratuito, rápido acesso |
+Este projeto tem como objetivo o desenvolvimento de um pipeline de Deep Learning aplicado à análise de séries temporais e imagens no mercado financeiro. O projeto combina dados tabulares com imagens geradas a partir de séries históricas de ativos, visando construir modelos preditivos robustos.
 
 ---
 
-## 🔥 Etapas do Pipeline
+## 🏗️ Arquitetura e Justificativa
 
-| Etapa                                    | Status   | Descrição                                                                                             |
-| ----------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| 1️⃣ Configuração do Repositório           | ✅       | Estruturação do GitHub, README.md, diretórios e dependências.                                        |
-| 2️⃣ Ingestão e Organização dos Dados      | ✅       | Dados tabulares (CSV) e imagens organizados.                                                         |
-| 3️⃣ Persistência no MongoDB Atlas         | ✅       | Dados tabulares e metadados das imagens armazenados.                                                 |
-| 4️⃣ Vetorização das Imagens               | ✅       | Imagens convertidas em vetores numéricos (shape 49152).                                              |
-| 5️⃣ Salvamento dos Vetores no Drive       | ✅       | Vetores armazenados no Google Drive como arquivos `.npy`.                                            |
-| 6️⃣ Construção dos Datasets para Modelagem| 🚧       | Combinação dos dados tabulares (X_csv), vetores de imagem (X_img) e labels (y).                      |
-| 7️⃣ Modelagem IA                          | ⏳       | Desenvolvimento dos modelos CNN 1D, RNN (LSTM/GRU) e CNN 2D (imagens).                               |
-| 8️⃣ Validação + Ajustes dos Modelos       | ⏳       | Avaliação das métricas, ajustes de hiperparâmetros e combate ao overfitting.                         |
-| 9️⃣ Análise Exploratória Pós-Modelagem    | ⏳       | Análise guiada pelos erros dos modelos, refinamento de features, detecção de padrões e anomalias.    |
-| 🔟 Avaliação Financeira (Backtest)        | ⏳       | Simulação financeira opcional, mas recomendada.                                                      |
-| 🏁 Documentação Final + Entrega           | ⏳       | Refinamento do README.md, notebooks finais e apresentação dos resultados.                            |
+### ✔️ Visão Estratégica da Arquitetura
+
+Adotamos uma **arquitetura híbrida**, que maximiza desempenho local para pré-processamento e vetorização pesada, mantendo a escalabilidade e a conveniência da nuvem para treinamento e experimentos com GPU.
+
+| Componente                        | Localização           | Justificativa                                                                 |
+| --------------------------------- | --------------------- | ----------------------------------------------------------------------------- |
+| **Dados brutos (imagens + CSV)**  | Local (SSD Ubuntu)    | Alta performance no acesso e pré-processamento local sem limitação de volume. |
+| **Dados tabulares processados**   | MongoDB Local         | Banco perene, rápido e sem limitações de espaço ou custo.                     |
+| **Vetores das imagens (X_img)**   | MongoDB Local + Drive | Persistência local + backup/transferência via Drive para uso no Colab.        |
+| **Arquivos para modelagem (X/y)** | Google Drive          | Acesso rápido no Colab (GPU) para treinamento e experimentação.               |
 
 ---
 
-## 🗂️ Organização dos Dados no Drive
+## 🔥 Pipeline de Desenvolvimento
 
-```
-/DLProject/data/processed/VALE3_SA/X_img.npy
-/DLProject/data/processed/VALE3_SA/X_csv.npy
-/DLProject/data/processed/VALE3_SA/y.npy
+### 🔄 Fluxo Completo
 
-/DLProject/data/processed/PETR4_SA/X_img.npy
+```plaintext
+Ingestão → Persistência no MongoDB Local → Vetorização das Imagens → 
+Exportação (Drive) → Modelagem (Colab com GPU) → Validação → EDA Pós-Modelagem
+
+🚀 Etapas Detalhadas
+Etapa	Status	Descrição
+1️⃣ Configuração do Ambiente Local	✅	Criação do ambiente em Ubuntu + MongoDB Local + Git + Estrutura de diretórios.
+2️⃣ Ingestão dos Dados Brutos	✅	Cópia dos dados (imagens e CSVs) para SSD local.
+3️⃣ Persistência no MongoDB Local	✅	Dados tabulares (treino/teste) e metadados das imagens são armazenados no MongoDB Local.
+4️⃣ Vetorização das Imagens	✅	Conversão das imagens em vetores numéricos de alta dimensão (CNN Encoder).
+5️⃣ Persistência dos Vetores	✅	Vetores são salvos no MongoDB Local e exportados como arquivos (.npy, .csv, .json) para o Google Drive.
+6️⃣ Construção dos Datasets Finais	🚧	Combinação dos dados tabulares (X_csv), vetores de imagem (X_img) e labels (y).
+7️⃣ Modelagem (Deep Learning)	⏳	Desenvolvimento dos modelos CNN 1D, RNN (LSTM/GRU) e CNN 2D (imagens).
+8️⃣ Validação e Ajustes dos Modelos	⏳	Avaliação de métricas, ajustes de hiperparâmetros, combate a overfitting e análise de erros.
+9️⃣ Análise Exploratória Pós-Modelagem	⏳	EDA baseada nos resultados dos modelos para identificar padrões, erros e melhorias potenciais.
+🔟 Backtest Financeiro (Opcional)	⏳	Avaliação financeira simulada da estratégia gerada pelos modelos (retorno, drawdown, etc.).
+🏁 Documentação Final e Entrega	⏳	Refinamento do README, notebooks finais, dashboards e apresentação.
+📂 Organização dos Dados
+📁 Estrutura Local
+/workspace/DLProject/
+├── data/
+│   ├── raw/          # Dados originais (imagens + CSV)
+│   ├── processed/    # Dados processados (vetores, datasets finais)
+│   └── backups/      # Backups locais
+├── notebooks/        # Jupyter Notebooks
+├── scripts/          # Scripts Python (.py)
+├── models/           # Modelos treinados
+├── README.md         # Documentação
+└── requirements.txt  # Dependências
+
+Estrutura no Google Drive
+
+/DLProject/data/processed/VALE3/
+├── X_img.npy         # Vetores das imagens
+├── X_csv.npy         # Dados tabulares vetorizados
+├── y.npy             # Labels
+
+/DLProject/data/processed/PETR4/
 ...
-```
 
----
+/DLProject/models/
+├── cnn1d_model.h5
+├── rnn_model.h5
+├── cnn2d_model.h5
 
-## ✅ Vantagens da Arquitetura Híbrida
+/DLProject/reports/
+├── resultados.xlsx
+├── gráficos.png
 
-- 🚀 Alta performance no carregamento dos dados.
-- 🔗 MongoDB Atlas mantém os dados relacionais leves, fáceis de consultar e portáveis.
-- 💾 Vetores de imagens ficam armazenados de forma eficiente e escalável no Google Drive.
-- 🎯 Pipeline robusto, simples, replicável e com baixo custo operacional.
+✅ Vantagens da Arquitetura
 
----
+    🏎️ Desempenho local máximo: Processamento pesado (vetorização, pré-processamento) roda no SSD local, sem custos e sem limites.
+
+    🔗 MongoDB Local: Banco perene, controle total dos dados, rápido, escalável e offline.
+
+    ☁️ Drive como Hub de Modelagem: Armazena datasets prontos para uso no Colab com GPU.
+
+    🔐 Segurança e Controle: Dados sensíveis não expostos na internet, mantidos no ambiente local.
+
+    💰 Zero custos adicionais: Sem dependência de MongoDB Atlas ou outros serviços pagos para dados de alto volume.
+
+    🔄 Pipeline replicável e auditável: Documentado, organizado e adequado tanto para uso acadêmico quanto profissional.
+
+
+Créditos
+
+    Projeto desenvolvido no contexto do MBA em Deep Learning — FIAP.
+
+    Autor: Wilson Melo.
+
+    Orientação e apoio: Comunidade e Professores da FIAP.
