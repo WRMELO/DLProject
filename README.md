@@ -1,118 +1,61 @@
-# DLProject — Previsão de Tendência de Ações com Deep Learning
+# 🚀 Plano de Desenvolvimento — Pipeline Atualizado
 
-Este repositório contém o desenvolvimento do Projeto Integrado de Deep Learning do MBA FIAP. O objetivo é construir um pipeline completo de ingestão, processamento e modelagem preditiva de tendência de ações com uso de IA.
+## 📑 Pipeline de Desenvolvimento — Atualizado
 
----
-
-## 🚀 Arquitetura Geral do Projeto
-
-* Dados organizados em MongoDB Atlas
-* Pipeline de ingestão e pré-processamento
-* Modelagem IA com CNN 1D, RNN (LSTM/GRU) e CNN 2D (imagens)
-* Simulações financeiras (backtest)
-* Pipeline escalável e reproduzível
-
----
-
-## 🏗️ Estrutura de Diretórios
+### ✔️ Fluxo Estratégico do Projeto
 
 ```
-/                    # Raiz do projeto
-├── data/
-│   ├── raw/         # Dados originais (CSV, imagens)
-│   └── processed/   # Dados pré-processados
-├── notebooks/       # Notebooks Colab para EDA e modelagem
-├── src/             # Scripts auxiliares
-├── models/          # Modelos treinados
-├── requirements.txt # Dependências Python
-├── README.md        # Documentação
-└── .gitignore       # Arquivos ignorados pelo Git
+Ingestão → Persistência (MongoDB) → Vetorização (Imagens) → Salvamento dos Vetores (Drive) → Modelagem IA → Validação e Ajustes → EDA Complementar
+```
+
+### ✔️ Justificativa da Arquitetura
+
+Adotamos uma **arquitetura híbrida**, que separa os dados conforme suas características e volume, garantindo robustez, escalabilidade, simplicidade e baixo custo.
+
+| Componente                       | Localização                       | Justificativa Principal                                          |
+|-----------------------------------|------------------------------------|------------------------------------------------------------------|
+| Dados tabulares (CSV)             | **MongoDB Atlas**                 | Leves, baixo volume, permite consultas remotas e centralizadas  |
+| Metadados das imagens             | **MongoDB Atlas**                 | Permitem rastreabilidade, controle e integridade dos dados      |
+| Vetores das imagens (X_img)       | **Google Drive (.npy)**            | Maior volume, armazenamento escalável e gratuito, rápido acesso |
+
+---
+
+## 🔥 Etapas do Pipeline
+
+| Etapa                                    | Status   | Descrição                                                                                             |
+| ----------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| 1️⃣ Configuração do Repositório           | ✅       | Estruturação do GitHub, README.md, diretórios e dependências.                                        |
+| 2️⃣ Ingestão e Organização dos Dados      | ✅       | Dados tabulares (CSV) e imagens organizados.                                                         |
+| 3️⃣ Persistência no MongoDB Atlas         | ✅       | Dados tabulares e metadados das imagens armazenados.                                                 |
+| 4️⃣ Vetorização das Imagens               | ✅       | Imagens convertidas em vetores numéricos (shape 49152).                                              |
+| 5️⃣ Salvamento dos Vetores no Drive       | ✅       | Vetores armazenados no Google Drive como arquivos `.npy`.                                            |
+| 6️⃣ Construção dos Datasets para Modelagem| 🚧       | Combinação dos dados tabulares (X_csv), vetores de imagem (X_img) e labels (y).                      |
+| 7️⃣ Modelagem IA                          | ⏳       | Desenvolvimento dos modelos CNN 1D, RNN (LSTM/GRU) e CNN 2D (imagens).                               |
+| 8️⃣ Validação + Ajustes dos Modelos       | ⏳       | Avaliação das métricas, ajustes de hiperparâmetros e combate ao overfitting.                         |
+| 9️⃣ Análise Exploratória Pós-Modelagem    | ⏳       | Análise guiada pelos erros dos modelos, refinamento de features, detecção de padrões e anomalias.    |
+| 🔟 Avaliação Financeira (Backtest)        | ⏳       | Simulação financeira opcional, mas recomendada.                                                      |
+| 🏁 Documentação Final + Entrega           | ⏳       | Refinamento do README.md, notebooks finais e apresentação dos resultados.                            |
+
+---
+
+## 🗂️ Organização dos Dados no Drive
+
+```
+/DLProject/data/processed/VALE3_SA/X_img.npy
+/DLProject/data/processed/VALE3_SA/X_csv.npy
+/DLProject/data/processed/VALE3_SA/y.npy
+
+/DLProject/data/processed/PETR4_SA/X_img.npy
+...
 ```
 
 ---
 
-## 🔥 Fluxo de Desenvolvimento Atualizado
+## ✅ Vantagens da Arquitetura Híbrida
 
-```
-Ingestão → Persistência (MongoDB) → Pré-processamento → Modelagem IA → Validação e Ajustes → EDA Complementar
-```
-
-### ✔️ Justificativa:
-
-* Priorizamos construir o pipeline e testar modelos antes da EDA detalhada.
-* A EDA torna-se mais assertiva quando feita após a primeira rodada de modelagem, guiada pelos resultados e erros.
+- 🚀 Alta performance no carregamento dos dados.
+- 🔗 MongoDB Atlas mantém os dados relacionais leves, fáceis de consultar e portáveis.
+- 💾 Vetores de imagens ficam armazenados de forma eficiente e escalável no Google Drive.
+- 🎯 Pipeline robusto, simples, replicável e com baixo custo operacional.
 
 ---
-
-## 📑 Pipeline de Desenvolvimento
-
-### 1. Configuração Inicial
-
-* Setup do repositório GitHub e ambiente Colab.
-
-### 2. Ingestão e Organização de Dados
-
-* Dados de múltiplos ativos em CSV e imagens.
-* Estruturação em MongoDB Atlas.
-
-### 3. Persistência no MongoDB
-
-* Dados tabulares e imagens com metadados organizados por ativo.
-
-### 4. Pré-processamento para IA
-
-* Criação dos datasets `X_csv`, `X_img`, `y`.
-
-### 5. Modelagem IA
-
-* CNN 1D, RNN e CNN 2D.
-
-### 6. Análise Exploratória de Dados (EDA) — pós-modelagem
-
-* Balanceamento, erros, distribuição, refinamento.
-
-### 7. Avaliação e Backtest
-
-* Métricas e simulações financeiras.
-
-### 8. Documentação e Entrega
-
-* README, notebooks finais, apresentações.
-
----
-
-## 🌐 Banco de Dados
-
-* **MongoDB Atlas**
-* Banco: `DLProject`
-* Coleções:
-
-  * `VALE3_SA`, `PETR4_SA`, `CSNA3_SA`, `BBAS3_SA`
-  * * coleções de imagens: `VALE3_SA_imagens`, etc.
-
----
-
-## 👨‍💻 Tecnologias
-
-* Python + Colab
-* MongoDB Atlas
-* TensorFlow / Keras
-* Pandas, Matplotlib, Seaborn, Plotly
-* VSCode, Git, GitHub
-
----
-
-## 📜 Justificativa da Flexibilização do Pipeline
-
-```
-Ingestão → Persistência (MongoDB) → Pré-processamento → Modelagem IA → Validação e Ajustes → EDA Complementar
-```
-
-* Esta abordagem permite validar rapidamente o pipeline de IA e otimizar o tempo.
-* A EDA feita após o modelo fornece insights mais relevantes e é guiada por erros e acertos do modelo.
-
----
-
-## 🚀 Autor
-
-* Wilson Melo — `WRMELO`
